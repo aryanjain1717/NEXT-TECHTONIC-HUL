@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NEXT Radar — Project NEXT</title>
+<style>
+:root{
+  --bg:#07111f; --bg2:#0b1728; --panel:#0e1d31; --panel2:#11243c; --line:#203650;
+  --text:#eef5fb; --muted:#9fb0c4; --accent:#5bd0ff; --accent2:#7df0c2; --yellow:#ffd166;
+  --orange:#ff9f5a; --red:#ff6b6b; --green:#67e8a5; --purple:#b9a3ff; --shadow:0 18px 55px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box} html,body{margin:0;background:linear-gradient(180deg,#06101d 0%,#081522 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{min-height:100vh}.app{display:grid;grid-template-columns:245px 1fr;min-height:100vh}
+.sidebar{border-right:1px solid var(--line);background:rgba(7,17,31,.96);padding:22px 18px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:24px}.logo{width:38px;height:38px;border:1px solid #2f607a;border-radius:10px;display:grid;place-items:center;font-weight:900;color:var(--accent);box-shadow:inset 0 0 30px rgba(91,208,255,.08)}
+.brand h1{font-size:15px;letter-spacing:.14em;margin:0}.brand small{display:block;color:var(--muted);letter-spacing:.06em;margin-top:3px}
+.mode{border:1px solid #1e4059;background:#0b1b2c;border-radius:12px;padding:10px 11px;margin-bottom:18px}.mode .pill{display:inline-flex;gap:6px;align-items:center;font-size:11px;color:var(--accent2);font-weight:800;text-transform:uppercase;letter-spacing:.06em}.dot{width:7px;height:7px;border-radius:999px;background:var(--accent2);box-shadow:0 0 12px var(--accent2)}.mode strong{display:block;margin-top:8px;font-size:13px}.mode span{font-size:11px;color:var(--muted)}
+.nav{display:grid;gap:7px}.nav button{width:100%;background:transparent;border:1px solid transparent;color:#bdd0e1;border-radius:10px;padding:11px 12px;text-align:left;cursor:pointer;font-size:13px;font-weight:750;display:flex;align-items:center;gap:10px}.nav button:hover{background:#0e2033}.nav button.active{background:#10263b;border-color:#24445f;color:white}.nav .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:7px;background:#122b42;color:#9edfff;font-size:11px}
+.sidebar-foot{position:absolute;left:18px;right:18px;bottom:18px;border-top:1px solid var(--line);padding-top:14px;color:#7f93a8;font-size:10px;line-height:1.5}
+.main{min-width:0}.topbar{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(8,21,34,.82);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}.crumb{font-size:12px;color:var(--muted)}.crumb b{color:#eaf4fd}.top-actions{display:flex;gap:9px;align-items:center}.chip{padding:7px 9px;border:1px solid #29435d;border-radius:999px;color:#b9cadd;background:#0c1a2b;font-size:11px}.chip strong{color:white}.content{padding:26px 28px 44px;max-width:1500px;margin:0 auto}.screen{display:none}.screen.active{display:block}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:850}.title-row{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:20px}.title-row h2{margin:6px 0 4px;font-size:30px;letter-spacing:-.03em}.subtitle{color:var(--muted);font-size:13px;max-width:790px;line-height:1.6}.primary-btn,.secondary-btn,.ghost-btn,.decision-btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}.primary-btn{background:linear-gradient(135deg,#4bc6fa,#6ee7c4);color:#04131d}.secondary-btn{background:#10263b;border:1px solid #31506b;color:#d9e8f4}.ghost-btn{background:transparent;border:1px solid #29435d;color:#bdd0e1}.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.metric{background:linear-gradient(180deg,#0e1e31,#0a1828);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow)}.metric .label{color:#8ea2b7;font-size:11px;text-transform:uppercase;letter-spacing:.07em}.metric .value{font-size:25px;font-weight:900;margin-top:5px}.metric .delta{font-size:11px;margin-top:4px;color:var(--accent2)}
+.grid-2{display:grid;grid-template-columns:1.45fr .75fr;gap:16px}.panel{background:linear-gradient(180deg,#0d1c2f,#0a1727);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.panel-head h3{font-size:13px;margin:0;letter-spacing:.01em}.panel-body{padding:14px 16px}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{font-size:10px;border:1px solid #29435d;border-radius:999px;padding:6px 8px;color:#a9bcd0}.filter.active{color:white;border-color:#3b7898;background:#0f2b42}
+.event-list{display:grid;gap:10px}.event-card{border:1px solid #203b55;background:#0b1b2c;border-radius:12px;padding:13px;display:grid;grid-template-columns:minmax(0,1fr) 120px 106px;gap:14px;align-items:center;cursor:pointer;transition:.16s}.event-card:hover{transform:translateY(-1px);border-color:#3a6b8a;background:#0e2236}.event-title{font-weight:850;font-size:14px}.event-desc{color:#90a4b8;font-size:11px;margin-top:4px;line-height:1.45}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.tag{font-size:9px;padding:4px 6px;border-radius:999px;border:1px solid #29435d;color:#a7b9ca}.tag.public{border-color:#1c806b;color:#88ebcc;background:#0d2a28}.tag.demo{border-color:#8b6932;color:#ffd783;background:#2a2110}.tag.synthetic{border-color:#6b4f91;color:#d2b8ff;background:#21182c}.tag.ai{border-color:#436d9c;color:#9ed1ff;background:#10243b}.brand-match{font-size:11px;color:#9fb1c3}.brand-match b{display:block;color:white;font-size:13px;margin-bottom:4px}.score{font-size:21px;font-weight:900;text-align:right}.band{font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-top:2px}.band.high{color:var(--orange)}.band.critical{color:var(--red)}.band.emerging{color:var(--yellow)}.band.watch{color:#92b5d0}.band.archive{color:#6f8498}
+.spark{height:34px;width:100%;margin-top:6px}.spark polyline{fill:none;stroke:#65d8ff;stroke-width:2}.spark line{stroke:#203650;stroke-width:1}.brand-rank{display:grid;gap:9px}.rank-row{display:grid;grid-template-columns:60px 1fr 30px;gap:8px;align-items:center;font-size:11px}.bar{height:7px;background:#152b41;border-radius:999px;overflow:hidden}.bar>span{display:block;height:100%;background:linear-gradient(90deg,#4bc6fa,#6ee7c4);border-radius:999px}.audit-mini{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);font-size:10px;color:#7e94a9;line-height:1.6}
+.hero-card{border:1px solid #31536e;background:radial-gradient(circle at 85% 0%,rgba(91,208,255,.12),transparent 30%),linear-gradient(180deg,#10243a,#0b1929);border-radius:16px;padding:18px;margin-bottom:16px}.hero-row{display:flex;justify-content:space-between;gap:18px}.hero-title{font-size:28px;font-weight:950;letter-spacing:-.03em}.hero-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.badge{display:inline-flex;align-items:center;border-radius:999px;padding:6px 8px;font-size:10px;border:1px solid #35526b;color:#c5d7e7}.badge.high{border-color:#7a5734;color:#ffd09a;background:#281c11}.badge.replay{border-color:#1b7568;color:#89e8d3;background:#0d2927}.ops-big{text-align:right}.ops-big .num{font-size:42px;font-weight:950}.ops-big .lab{font-size:10px;color:#9db0c4;text-transform:uppercase;letter-spacing:.08em}.ops-big .band{font-size:11px}
+.dossier-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.stack{display:grid;gap:16px}.timeline{position:relative;padding-left:18px}.timeline:before{content:"";position:absolute;left:5px;top:3px;bottom:3px;width:1px;background:#28455e}.titem{position:relative;padding:0 0 14px 10px}.titem:before{content:"";position:absolute;left:-16px;top:4px;width:7px;height:7px;background:var(--accent);border-radius:50%;box-shadow:0 0 12px rgba(91,208,255,.45)}.titem:last-child{padding-bottom:0}.titem strong{font-size:11px}.titem p{font-size:10px;color:#8ea4b8;margin:4px 0 0;line-height:1.45}
+.score-table{display:grid;gap:8px}.score-row{display:grid;grid-template-columns:135px 1fr 42px;gap:9px;align-items:center;font-size:11px}.score-row .name{color:#b4c6d7}.score-row .num{font-weight:900;text-align:right}.scorebar{height:8px;border-radius:999px;background:#14293e;overflow:hidden}.scorebar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#5ecfff,#7df0c2)}.scorebar.risk span{background:linear-gradient(90deg,#ffb36d,#ff7373)}.formula{margin-top:12px;border:1px solid #234058;background:#071726;border-radius:10px;padding:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;line-height:1.7;color:#bcd3e4}.formula strong{color:white}.evidence-list{display:grid;gap:9px}.evidence{padding:10px;border:1px solid #203c55;border-radius:10px;background:#0a1929}.evidence .row{display:flex;justify-content:space-between;gap:9px;align-items:flex-start}.evidence h4{font-size:11px;margin:0}.evidence p{font-size:10px;color:#91a4b7;line-height:1.5;margin:6px 0 0}.source-pill{white-space:nowrap;font-size:8px;border-radius:999px;padding:4px 6px;border:1px solid #29435d}.prov{font-size:9px;color:#70869b;margin-top:7px}
+.ask-layout{display:grid;grid-template-columns:1fr 330px;gap:16px}.chat{height:500px;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:11px}.msg{max-width:82%;padding:11px 12px;border-radius:12px;font-size:12px;line-height:1.55}.msg.user{align-self:flex-end;background:#143653;border:1px solid #315c7b}.msg.ai{align-self:flex-start;background:#0b1d2f;border:1px solid #24445f;color:#dce9f4}.msg.ai .cite{display:block;margin-top:8px;color:#83bcdc;font-size:9px}.prompt-row{display:flex;gap:7px;flex-wrap:wrap;padding:0 16px 12px}.prompt-chip{border:1px solid #2b4962;border-radius:999px;background:#0d2032;color:#bcd0e2;padding:7px 9px;font-size:10px;cursor:pointer}.prompt-chip:hover{border-color:#4783a7;color:white}.composer{border-top:1px solid var(--line);display:flex;gap:8px;padding:12px}.composer input{flex:1;background:#081827;border:1px solid #2c4a64;border-radius:10px;color:white;padding:11px 12px;outline:none}.insight{border-left:3px solid var(--accent);padding:10px 11px;background:#0b1b2b;font-size:11px;line-height:1.55;color:#b9ccdc;margin-bottom:10px}.weight-grid{display:grid;gap:10px}.weight-row{display:grid;grid-template-columns:110px 1fr 38px;gap:8px;align-items:center;font-size:10px}.weight-row input{width:100%}.sim-card{border:1px solid #28516b;background:#0c2033;border-radius:12px;padding:12px;margin-top:14px}.sim-card .sim-num{font-size:31px;font-weight:950}.sim-card small{color:#8fa6ba}.warning{border:1px solid #705530;background:#251c0e;color:#ffcf8a;padding:9px 10px;border-radius:9px;font-size:9px;margin-top:10px;line-height:1.5}
+.decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.decision-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.decision-btn{padding:16px;text-align:left;border:1px solid #31506b;background:#0d1f32;color:#e7f2fa}.decision-btn strong{display:block;font-size:13px}.decision-btn span{display:block;color:#8fa4b7;font-size:10px;margin-top:4px;line-height:1.4}.decision-btn.approve{border-color:#20765d;background:#0d2b24}.decision-btn.approve strong{color:#82ebc3}.decision-btn.watch{border-color:#7d6731;background:#28210e}.decision-btn.watch strong{color:#ffd67b}.decision-btn.reject{border-color:#6d3840;background:#271317}.decision-btn.reject strong{color:#ff9ca7}.decision-btn.escalate{border-color:#4c477f;background:#18162e}.decision-btn.escalate strong{color:#c2b8ff}.handoff{display:none}.handoff.active{display:block}.handoff-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kv{padding:10px;border:1px solid #203c55;border-radius:10px;background:#091827}.kv .k{font-size:9px;text-transform:uppercase;color:#7f96aa;letter-spacing:.06em}.kv .v{font-size:11px;color:#d9e9f4;margin-top:5px;line-height:1.4}.success{border:1px solid #24735e;background:#0c2a23;color:#9df0d1;padding:12px;border-radius:11px;margin-bottom:12px;font-size:11px}.footer-note{margin-top:20px;color:#71869a;font-size:9px;line-height:1.6}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}.modal.active{display:flex}.modal-card{width:min(700px,96vw);max-height:86vh;overflow:auto;border:1px solid #31516c;background:#0b1a2a;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.5)}.modal-head{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.modal-head h3{margin:0;font-size:14px}.modal-body{padding:16px}.close{background:none;border:0;color:#a9baca;font-size:22px;cursor:pointer}.audit-row{display:grid;grid-template-columns:115px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid #162b40;font-size:10px}.audit-row:last-child{border:0}.audit-row .time{color:#71899e}.audit-row .event{color:#d8e8f4;line-height:1.45}
+@media(max-width:1000px){.app{grid-template-columns:78px 1fr}.sidebar{padding:18px 10px}.brand h1,.brand small,.mode,.nav button span:last-child,.sidebar-foot{display:none}.brand{justify-content:center}.nav button{justify-content:center;padding:10px}.grid-2,.dossier-grid,.ask-layout,.decision-grid{grid-template-columns:1fr}.metric-grid{grid-template-columns:repeat(2,1fr)}.event-card{grid-template-columns:1fr 90px 85px}.topbar{padding:0 16px}.content{padding:20px 16px}.title-row{align-items:flex-start;flex-direction:column}}
+@media(max-width:650px){.app{display:block}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}.brand{margin:0}.nav{display:flex;overflow:auto}.nav button{width:auto}.main{width:100%}.topbar{position:static}.metric-grid{grid-template-columns:1fr 1fr}.event-card{grid-template-columns:1fr}.score{text-align:left}.hero-row{flex-direction:column}.ops-big{text-align:left}.decision-actions{grid-template-columns:1fr}.handoff-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">N</div><div><h1>NEXT RADAR</h1><small>PROJECT NEXT</small></div></div>
+    <div class="mode"><div class="pill"><span class="dot"></span> Historical Replay</div><strong>09 Jul 2024</strong><span>Point-in-time evidence only</span></div>
+    <div class="nav">
+      <button class="active" data-screen="home"><span class="n">1</span><span>Radar Home</span></button>
+      <button data-screen="dossier"><span class="n">2</span><span>Opportunity Dossier</span></button>
+      <button data-screen="ask"><span class="n">3</span><span>Ask Radar</span></button>
+      <button data-screen="decision"><span class="n">4</span><span>Decision & Handoff</span></button>
+    </div>
+    <div class="sidebar-foot">Controlled competition prototype.<br/>Synthetic internal data is visibly labelled.</div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb">Project NEXT / <b id="crumb">Radar Home</b></div>
+      <div class="top-actions">
+        <span class="chip">Workspace: <strong id="workspace">Portfolio</strong></span>
+        <button class="ghost-btn" id="auditBtn">Audit trail</button>
+      </div>
+    </div>
+    <div class="content">
+      <section class="screen active" id="home">
+        <div class="title-row">
+          <div><div class="eyebrow">Sense → Understand</div><h2>Market signal command center</h2><div class="subtitle">Radar clusters noisy signals into evolving events, compares them across the portfolio, and only interrupts Brand Managers when an opportunity crosses a meaningful priority threshold.</div></div>
+          <button class="secondary-btn" id="openBrat">Open hero opportunity</button>
+        </div>
+        <div class="metric-grid">
+          <div class="metric"><div class="label">Signals scanned</div><div class="value">18.4K</div><div class="delta">Controlled demo input</div></div>
+          <div class="metric"><div class="label">Event clusters</div><div class="value">126</div><div class="delta">Deduplicated from raw signals</div></div>
+          <div class="metric"><div class="label">Brand-relevant</div><div class="value">14</div><div class="delta">Portfolio routing passed</div></div>
+          <div class="metric"><div class="label">Priority alerts</div><div class="value">4</div><div class="delta">1 Critical · 3 High Priority</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head"><h3>Opportunity feed</h3><div class="filters"><span class="filter active">All</span><span class="filter">Critical</span><span class="filter">High Priority</span><span class="filter">Emerging</span></div></div>
+            <div class="panel-body"><div class="event-list" id="eventList"></div></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Portfolio routing — Brat Summer</h3><span class="tag ai">AI-DERIVED</span></div>
+            <div class="panel-body">
+              <div class="brand-rank" id="brandRank"></div>
+              <div class="audit-mini">Radar compares each event against governed Brand Memory before full opportunity scoring. Only sufficiently relevant brands advance to the full OPS workflow.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="dossier">
+        <div class="title-row"><div><div class="eyebrow">Verify → Understand → Score</div><h2>Opportunity dossier</h2><div class="subtitle">A single evidence-grounded object for the event, its brand fit, score evolution and decision provenance.</div></div></div>
+        <div class="hero-card">
+          <div class="hero-row"><div><div class="hero-title">Brat Summer</div><div class="hero-meta"><span class="badge replay">As of 09 Jul 2024</span><span class="badge high">High Priority</span><span class="badge">Top match: AXE</span><span class="badge">Event #CUL-240607-BRAT</span></div></div><div class="ops-big"><div class="num">78.1</div><div class="lab">Opportunity Priority Score</div><div class="band high">HIGH PRIORITY</div></div></div>
+        </div>
+        <div class="dossier-grid">
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><h3>What happened</h3><span class="tag public">PUBLIC FACT + CONTROLLED INPUT</span></div><div class="panel-body">
+              <p style="font-size:12px;line-height:1.65;color:#c5d5e3;margin-top:0">A distinctive music-and-visual culture around Charli XCX's <em>Brat</em> accelerated through social platforms, memes and brand participation. Radar treats the phenomenon as one evolving event rather than thousands of individual posts.</p>
+              <div class="timeline">
+                <div class="titem"><strong>07 Jun · Event seeded</strong><p>Album release creates a coherent visual/cultural signal cluster.</p></div>
+                <div class="titem"><strong>21 Jun · Momentum accelerates</strong><p>Controlled signal velocity crosses Radar's rising-momentum threshold.</p></div>
+                <div class="titem"><strong>05–09 Jul · Cross-category adoption</strong><p>Brand participation and meme reuse increase novelty persistence and actionability.</p></div>
+                <div class="titem"><strong>09 Jul · Current replay state</strong><p>Axe ranks highest in portfolio relevance. Commercial evidence remains weaker than cultural momentum.</p></div>
+              </div>
+            </div></div>
+            <div class="panel"><div class="panel-head"><h3>Why Axe</h3><span class="tag ai">AI-DERIVED</span></div><div class="panel-body">
+              <div class="insight"><b>Strong semantic overlap:</b> youth culture, music, self-expression, playful irreverence and fragrance-led identity. The event does not directly mention Axe, so this is a Brand Memory match rather than keyword detection.</div>
+              <div class="brand-rank" id="dossierRank"></div>
+              <div class="footer-note">Governed Brand Memory summary used in this prototype: Axe = youth/young-adult fragrance, confidence, playful culture and social-first expression; Dove = beauty/self-esteem/representation; Rexona = movement/sport/reliability; Knorr = food/flavour/convenience.</div>
+            </div></div>
+            <div class="panel"><div class="panel-head"><h3>Evidence ledger</h3><span class="tag">4 evidence classes</span></div><div class="panel-body"><div class="evidence-list" id="evidenceList"></div></div></div>
+          </div>
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><h3>Score decomposition</h3><button class="ghost-btn" id="simulateBtn">What-if weights</button></div><div class="panel-body">
+              <div class="score-table" id="scoreTable"></div>
+              <div class="formula"><strong>ROS</strong> = .20(80) + .30(95) + .20(91) + .15(60) + .15(84) = <strong>84.30</strong><br/><strong>Risk penalty</strong> = .25(25) = <strong>6.25</strong><br/><strong>OPS</strong> = 84.30 − 6.25 = <strong>78.05 ≈ 78.1</strong></div>
+            </div></div>
+            <div class="panel"><div class="panel-head"><h3>Why not Critical?</h3><span class="tag ai">AI-DERIVED</span></div><div class="panel-body"><div class="insight">Momentum is exceptional, but India-specific commercial corroboration is still limited and the cultural connection remains indirect. Radar therefore triggers immediate Brand Manager review without treating virality alone as sufficient for a Critical classification.</div><button class="secondary-btn" id="askWhy">Ask Radar about this</button></div></div>
+            <div class="panel"><div class="panel-head"><h3>Score history</h3><span class="tag demo">CONTROLLED DEMO INPUT</span></div><div class="panel-body">
+              <svg viewBox="0 0 420 130" width="100%" height="150" aria-label="Score history"><line x1="30" y1="105" x2="405" y2="105" stroke="#203650"/><line x1="30" y1="60" x2="405" y2="60" stroke="#203650"/><line x1="30" y1="20" x2="405" y2="20" stroke="#203650"/><polyline points="35,100 100,90 165,76 230,61 295,48 360,42 402,38" fill="none" stroke="#67e8a5" stroke-width="3"/><text x="32" y="122" fill="#7890a5" font-size="9">07 Jun</text><text x="170" y="122" fill="#7890a5" font-size="9">21 Jun</text><text x="330" y="122" fill="#7890a5" font-size="9">09 Jul</text><text x="372" y="30" fill="#9ef0d2" font-size="10">78.1</text></svg>
+              <div class="footer-note">Historical snapshots preserve timestamp, evidence bundle, model version and scoring-profile version. Later evidence never leaks backward into earlier replay states.</div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="ask">
+        <div class="title-row"><div><div class="eyebrow">Explore</div><h2>Ask Radar</h2><div class="subtitle">Interrogate the dossier and run controlled counterfactuals. The conversation is grounded in the opportunity evidence and Brand Memory; deterministic services remain the source of truth for mathematics.</div></div></div>
+        <div class="ask-layout">
+          <div class="panel">
+            <div class="panel-head"><h3>Brat Summer · Axe · OPS 78.1</h3><span class="tag ai">GROUNDED</span></div>
+            <div class="chat" id="chat"><div class="msg ai">I am grounded in the Brat Summer dossier as of 09 Jul 2024 and the governed Brand Memory for the four demo brands. Ask me to explain evidence, brand routing, score drivers or a weight simulation.<span class="cite">Grounding: dossier #CUL-240607-BRAT · scoring profile AXE-v1.0</span></div></div>
+            <div class="prompt-row"><button class="prompt-chip">Why isn't this Critical?</button><button class="prompt-chip">Why Axe over Dove?</button><button class="prompt-chip">Show evidence behind Commercial Signal</button><button class="prompt-chip">What if Momentum weight falls to 20%?</button><button class="prompt-chip">What evidence changed most recently?</button></div>
+            <div class="composer"><input id="askInput" placeholder="Ask a grounded question…"/><button class="primary-btn" id="sendAsk">Ask</button></div>
+          </div>
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><h3>Current score</h3></div><div class="panel-body"><div class="ops-big" style="text-align:left"><div class="num">78.1</div><div class="band high">HIGH PRIORITY</div></div><div class="footer-note">ROS 84.30 · Risk 25 · penalty 6.25</div></div></div>
+            <div class="panel"><div class="panel-head"><h3>Scoring profile</h3><span class="tag">AXE-v1.0</span></div><div class="panel-body"><div class="weight-grid" id="miniWeights"></div><div class="warning">Weight changes in Ask Radar are simulations only. A production profile change must be proposed by the Brand Manager and centrally approved, versioned and audited.</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="decision">
+        <div class="title-row"><div><div class="eyebrow">Decide</div><h2>Human decision & Strategist handoff</h2><div class="subtitle">Radar prepares the complete opportunity package, but a human Brand Manager still owns the decision to advance, watch, reject or escalate.</div></div></div>
+        <div class="decision-grid">
+          <div class="panel"><div class="panel-head"><h3>Brand Manager action</h3><span class="tag">HUMAN-IN-THE-LOOP</span></div><div class="panel-body">
+            <div class="hero-card" style="margin:0 0 14px"><div class="hero-row"><div><div class="hero-title" style="font-size:21px">Brat Summer × Axe</div><div class="hero-meta"><span class="badge high">OPS 78.1 · High Priority</span><span class="badge">Risk 25</span></div></div></div></div>
+            <div class="decision-actions">
+              <button class="decision-btn approve" data-action="approve"><strong>Approve → Strategist</strong><span>Advance the opportunity with the complete evidence and score context.</span></button>
+              <button class="decision-btn watch" data-action="watch"><strong>Watch</strong><span>Continue monitoring the evolving event and re-score as evidence changes.</span></button>
+              <button class="decision-btn reject" data-action="reject"><strong>Reject</strong><span>Close for this brand while preserving the rationale and audit history.</span></button>
+              <button class="decision-btn escalate" data-action="escalate"><strong>Escalate</strong><span>Voluntarily request additional judgment before deciding.</span></button>
+            </div>
+            <div class="footer-note">No action here can directly publish creative or activate media. Downstream strategy and validation remain separate Project NEXT products.</div>
+          </div></div>
+          <div class="panel"><div class="panel-head"><h3>NEXT Strategist handoff</h3><span class="tag">STRUCTURED CONTEXT</span></div><div class="panel-body"><div id="handoffPlaceholder" class="insight">Approve the opportunity to generate a structured handoff package. The handoff contains context and constraints — not a pre-written campaign strategy.</div><div class="handoff" id="handoff">
+            <div class="success">✓ Opportunity #AXE-2024-071 transferred to NEXT Strategist · Human approval recorded · Audit trail preserved</div>
+            <div class="handoff-grid">
+              <div class="kv"><div class="k">Opportunity</div><div class="v">Brat Summer — emerging culture opportunity</div></div>
+              <div class="kv"><div class="k">Brand</div><div class="v">Axe · strongest portfolio match</div></div>
+              <div class="kv"><div class="k">Decision timestamp</div><div class="v" id="decisionTime">09 Jul 2024 · replay</div></div>
+              <div class="kv"><div class="k">Priority</div><div class="v">OPS 78.1 · High Priority</div></div>
+              <div class="kv"><div class="k">Opportunity window</div><div class="v">Fast-moving; cultural saturation risk rising</div></div>
+              <div class="kv"><div class="k">Core evidence</div><div class="v">Momentum acceleration, cross-category cultural reuse, strong youth-expression fit</div></div>
+              <div class="kv"><div class="k">Key uncertainty</div><div class="v">Limited direct India-specific fragrance/commercial corroboration</div></div>
+              <div class="kv"><div class="k">Risk context</div><div class="v">Forced participation / cultural-authenticity / timing risk</div></div>
+            </div>
+          </div></div></div>
+        </div>
+        <div class="footer-note">Prototype scope: India · four demo brands · controlled/sandboxed data · no live HUL integrations.</div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="auditModal"><div class="modal-card"><div class="modal-head"><h3>Audit trail — Brat Summer × Axe</h3><button class="close" id="closeAudit">×</button></div><div class="modal-body" id="auditBody"></div></div></div>
+<div class="modal" id="weightModal"><div class="modal-card"><div class="modal-head"><h3>What-if scoring simulation</h3><button class="close" id="closeWeight">×</button></div><div class="modal-body">
+  <div class="subtitle" style="margin-bottom:12px">Adjust positive weights. This simulation does not change the production profile. The five weights must total 100%.</div>
+  <div class="weight-grid" id="weightControls"></div>
+  <div class="sim-card"><small>Simulated OPS</small><div class="sim-num" id="simOps">78.1</div><div class="band high" id="simBand">HIGH PRIORITY</div><div class="footer-note" id="simNote">Current profile: 20 / 30 / 20 / 15 / 15</div></div>
+  <div class="warning">Production scoring-profile changes require Brand Manager proposal → central approval → versioned activation. Historical events keep the profile that scored them.</div>
+</div></div></div>
+
+<script>
+const weights={br:20,m:30,n:20,cs:15,a:15};
+const heroScores={br:80,m:95,n:91,cs:60,a:84,risk:25};
+const events=[
+ {title:'Rexona × stoppage-time moment',desc:'Accidental on-camera brand moment accelerates through football meme culture.',brand:'Rexona',match:98,ops:86.0,band:'critical',sources:31,spark:[15,26,34,52,69,88,100],tags:['PUBLIC FACT','AI-DERIVED']},
+ {title:'Brat Summer',desc:'Music, meme and visual-language phenomenon spreads beyond the original fan community.',brand:'Axe',match:80,ops:78.1,band:'high',sources:48,spark:[8,15,24,43,65,82,96],tags:['PUBLIC FACT','CONTROLLED DEMO INPUT'],hero:true},
+ {title:'Girl Dinner',desc:'Low-prep food behavior becomes a reusable social format and convenience conversation.',brand:'Knorr',match:82,ops:79.7,band:'high',sources:35,spark:[11,20,41,54,69,77,84],tags:['PUBLIC FACT','CONTROLLED DEMO INPUT']},
+ {title:'Barbie beauty discourse',desc:'Representation and beauty-standard conversation creates a purpose-linked brand opportunity.',brand:'Dove',match:85,ops:73.9,band:'high',sources:42,spark:[19,35,49,60,75,84,88],tags:['PUBLIC FACT','AI-DERIVED']},
+ {title:'UEFA Euro 2024 semi-final chatter',desc:'High-volume sports discussion; routed primarily toward movement/sport territories.',brand:'Rexona',match:74,ops:64.2,band:'emerging',sources:57,spark:[28,35,48,62,78,82,87],tags:['CONTROLLED DEMO INPUT']},
+ {title:'Inside Out 2 emotion-meme wave',desc:'Broad entertainment signal with limited direct relevance to the current Axe workspace.',brand:'Dove',match:46,ops:48.7,band:'watch',sources:29,spark:[20,32,39,55,60,65,69],tags:['CONTROLLED DEMO INPUT']},
+ {title:'Wimbledon fashion conversation',desc:'Event-linked style chatter; portfolio relevance does not pass the high-priority threshold.',brand:'Axe',match:42,ops:43.1,band:'watch',sources:18,spark:[21,27,31,38,45,51,54],tags:['CONTROLLED DEMO INPUT']},
+ {title:'Paris Olympics anticipation',desc:'Large future sports signal currently routed to Watch while evidence accumulates.',brand:'Rexona',match:68,ops:53.4,band:'watch',sources:24,spark:[12,18,28,34,42,47,52],tags:['CONTROLLED DEMO INPUT']},
+ {title:'UK election visual meme cycle',desc:'High visibility, low brand fit; retained for market context but not promoted.',brand:'Axe',match:18,ops:28.0,band:'archive',sources:33,spark:[16,22,35,50,57,61,65],tags:['PUBLIC FACT','AI-DERIVED']}
+];
+const evidence=[
+ {title:'Cross-platform cultural acceleration',type:'PUBLIC FACT',cls:'public',text:'Public reporting before the replay cutoff described rapid spread of Brat-associated visual language, memes and brand participation.',prov:'Available by 09 Jul 2024 · source timestamp preserved'},
+ {title:'Signal velocity series',type:'CONTROLLED DEMO INPUT',cls:'demo',text:'Frozen timestamped mention/search trajectory used by the deterministic Momentum Engine to calculate velocity and acceleration.',prov:'Reconstructed for prototype reproducibility · not a claimed HUL dataset'},
+ {title:'Axe Brand Memory retrieval',type:'AI-DERIVED',cls:'ai',text:'Retrieved concepts emphasize youth/young-adult fragrance, playful self-expression and culturally fluent brand behavior.',prov:'Brand Intelligence Agent · Brand Memory AXE-v1'},
+ {title:'India commercial proxy',type:'SYNTHETIC INTERNAL',cls:'synthetic',text:'Illustrative search/e-commerce indicators provide only moderate corroboration, limiting Commercial Signal to 60.',prov:'Synthetic internal demo data · clearly non-factual'},
+ {title:'Actionability rationale',type:'AI-DERIVED',cls:'ai',text:'The event is highly remixable for fast social response, but authenticity and response timing remain meaningful constraints.',prov:'Opportunity & Risk Agent · model output logged'},
+];
+const brandRanking=[['Axe',80],['Dove',46],['Rexona',32],['Knorr',14]];
+const factorNames={br:'Brand Relevance',m:'Momentum',n:'Novelty',cs:'Commercial Signal',a:'Actionability'};
+function bandFor(v){if(v>=85)return['Critical','critical'];if(v>=70)return['High Priority','high'];if(v>=55)return['Emerging','emerging'];if(v>=40)return['Watch','watch'];return['Archive','archive'];}
+function scoreOps(w=weights){let total=w.br+w.m+w.n+w.cs+w.a;if(total!==100)return null;const ros=(w.br*heroScores.br+w.m*heroScores.m+w.n*heroScores.n+w.cs*heroScores.cs+w.a*heroScores.a)/100;return {ros,ops:ros-.25*heroScores.risk};}
+function renderEvents(){const root=document.getElementById('eventList');root.innerHTML='';events.forEach(e=>{const el=document.createElement('div');el.className='event-card';el.innerHTML=`<div><div class="event-title">${e.title}</div><div class="event-desc">${e.desc}</div><div class="tags">${e.tags.map(t=>`<span class="tag ${t.includes('PUBLIC')?'public':t.includes('SYNTHETIC')?'synthetic':t.includes('AI')?'ai':'demo'}">${t}</span>`).join('')}</div></div><div><div class="brand-match"><b>${e.brand}</b>match ${e.match}/100</div><svg class="spark" viewBox="0 0 100 35" preserveAspectRatio="none"><line x1="0" y1="32" x2="100" y2="32"/><polyline points="${e.spark.map((v,i)=>`${i*(100/(e.spark.length-1))},${34-v*.3}`).join(' ')}"/></svg></div><div><div class="score">${e.ops.toFixed(1)}</div><div class="band ${e.band}">${e.band==='high'?'High Priority':e.band[0].toUpperCase()+e.band.slice(1)}</div><div class="event-desc" style="text-align:right">${e.sources} sources</div></div>`;if(e.hero)el.addEventListener('click',()=>go('dossier'));root.appendChild(el);});}
+function renderRanks(target){const root=document.getElementById(target);root.innerHTML='';brandRanking.forEach(([b,s])=>{root.innerHTML+=`<div class="rank-row"><span>${b}</span><div class="bar"><span style="width:${s}%"></span></div><b>${s}</b></div>`;});}
+function renderScores(){const vals={br:80,m:95,n:91,cs:60,a:84};const root=document.getElementById('scoreTable');root.innerHTML='';Object.entries(vals).forEach(([k,v])=>root.innerHTML+=`<div class="score-row"><span class="name">${factorNames[k]}</span><div class="scorebar"><span style="width:${v}%"></span></div><span class="num">${v}</span></div>`);root.innerHTML+=`<div class="score-row"><span class="name">Risk</span><div class="scorebar risk"><span style="width:25%"></span></div><span class="num">25</span></div>`;}
+function renderEvidence(){const root=document.getElementById('evidenceList');root.innerHTML='';evidence.forEach(e=>root.innerHTML+=`<div class="evidence"><div class="row"><h4>${e.title}</h4><span class="source-pill tag ${e.cls}">${e.type}</span></div><p>${e.text}</p><div class="prov">${e.prov}</div></div>`);}
+function renderMiniWeights(){const root=document.getElementById('miniWeights');root.innerHTML='';Object.entries(weights).forEach(([k,v])=>root.innerHTML+=`<div class="weight-row"><span>${factorNames[k]}</span><div class="bar"><span style="width:${v*2.4}%"></span></div><b>${v}%</b></div>`);}
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));const labels={home:'Radar Home',dossier:'Opportunity Dossier',ask:'Ask Radar',decision:'Decision & Handoff'};document.getElementById('crumb').textContent=labels[id];document.getElementById('workspace').textContent=id==='home'?'Portfolio':'Axe';window.scrollTo({top:0,behavior:'smooth'});}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.screen));document.getElementById('openBrat').onclick=()=>go('dossier');document.getElementById('askWhy').onclick=()=>{go('ask');setTimeout(()=>submitQuestion("Why isn't this Critical?"),100)};
+function answerFor(q){const t=q.toLowerCase();if(t.includes('critical'))return `Momentum is exceptionally strong at 95, but Radar does not equate virality with a Critical brand opportunity. Commercial Signal is only 60 because direct India-specific fragrance/commercial corroboration is limited, and Risk is 25 due to authenticity and timing concerns. Those constraints reduce ROS 84.3 to OPS 78.1, which routes to High Priority.`;if(t.includes('axe')&&t.includes('dove'))return `Axe scores higher because the event overlaps more strongly with youth culture, music, playful self-expression and fragrance-led identity in the governed Axe Brand Memory. Dove has some overlap through self-expression and identity, but the event is less directly connected to Dove's core beauty/self-esteem territory. Portfolio relevance therefore routes Axe first.`;if(t.includes('commercial'))return `Commercial Signal is 60. Radar has evidence that the cultural phenomenon is spreading and brands are participating, but the prototype has only moderate controlled/synthetic evidence of India-specific search, e-commerce or category demand linked to Axe. This keeps the system from converting cultural heat directly into a commercial claim.`;if(t.includes('momentum')&&t.includes('20')){const nw={br:25,m:20,n:25,cs:15,a:15};const r=scoreOps(nw);return `Simulation only: using a normalized alternative profile of 25% Brand Relevance, 20% Momentum, 25% Novelty, 15% Commercial Signal and 15% Actionability, OPS becomes ${r.ops.toFixed(1)} (${bandFor(r.ops)[0]}). The production AXE-v1.0 profile remains unchanged until a centrally approved version is activated.`}if(t.includes('recent')||t.includes('changed'))return `The most recent meaningful change in the replay window is stronger cross-category cultural reuse and continued signal acceleration. That primarily lifts Momentum and supports Actionability. Commercial evidence remains the weakest positive factor, which is why the route stays High Priority rather than Critical.`;if(t.includes('risk'))return `Risk is 25/100. The main concerns are forced or inauthentic brand participation, timing risk as the meme cycle saturates, and possible cultural/IP sensitivities. Risk is modeled separately and subtracts 6.25 points from ROS rather than being hidden inside a positive 'safety' score.`;if(t.includes('score')||t.includes('ops'))return `The deterministic engine calculates ROS = 84.30 from the five positive factors using the approved AXE-v1.0 weights. Risk 25 creates a 6.25-point penalty, producing OPS 78.05, displayed as 78.1. Ask Radar can explain this calculation but cannot overwrite it.`;return `I can only answer from the frozen Brat Summer dossier, governed Brand Memory and deterministic score outputs. Try asking about the Critical threshold, Axe vs another brand, Commercial Signal, Risk, score drivers or a weight counterfactual.`;}
+function submitQuestion(q){if(!q.trim())return;const chat=document.getElementById('chat');const u=document.createElement('div');u.className='msg user';u.textContent=q;chat.appendChild(u);const a=document.createElement('div');a.className='msg ai';a.innerHTML=answerFor(q)+`<span class="cite">Grounding: Brat dossier · Brand Memory · scoring profile AXE-v1.0</span>`;chat.appendChild(a);chat.scrollTop=chat.scrollHeight;}
+document.getElementById('sendAsk').onclick=()=>{const i=document.getElementById('askInput');submitQuestion(i.value);i.value='';};document.getElementById('askInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sendAsk').click()});document.querySelectorAll('.prompt-chip').forEach(b=>b.onclick=()=>submitQuestion(b.textContent));
+const auditEntries=[
+ ['09 Jul 2024 · 11:20','Opportunity snapshot scored with AXE-v1.0. ROS 84.30; Risk 25; OPS 78.05 → High Priority.'],
+ ['09 Jul 2024 · 11:19','Opportunity & Risk Agent wrote Actionability 84 and Risk 25 with evidence pointers.'],
+ ['09 Jul 2024 · 11:19','Momentum Engine = 95; Novelty Engine = 91; Commercial Signal Engine = 60.'],
+ ['09 Jul 2024 · 11:18','Brand Intelligence Agent ranked Axe 80, Dove 46, Rexona 32, Knorr 14.'],
+ ['09 Jul 2024 · 11:18','Signal Intelligence Agent updated event cluster CUL-240607-BRAT from new evidence.'],
+ ['07 Jun 2024 · 14:10','Event cluster CUL-240607-BRAT created. Historical replay provenance initialized.']
+];
+function renderAudit(){document.getElementById('auditBody').innerHTML=auditEntries.map(x=>`<div class="audit-row"><div class="time">${x[0]}</div><div class="event">${x[1]}</div></div>`).join('');}
+document.getElementById('auditBtn').onclick=()=>document.getElementById('auditModal').classList.add('active');document.getElementById('closeAudit').onclick=()=>document.getElementById('auditModal').classList.remove('active');document.getElementById('auditModal').onclick=e=>{if(e.target.id==='auditModal')e.currentTarget.classList.remove('active')};
+function buildWeightControls(){const root=document.getElementById('weightControls');root.innerHTML='';Object.entries(weights).forEach(([k,v])=>{root.innerHTML+=`<div class="weight-row"><span>${factorNames[k]}</span><input type="range" min="0" max="50" value="${v}" data-key="${k}"/><b id="wv-${k}">${v}%</b></div>`});root.querySelectorAll('input').forEach(i=>i.oninput=updateSimulation);updateSimulation();}
+function updateSimulation(){const w={};document.querySelectorAll('#weightControls input').forEach(i=>{w[i.dataset.key]=+i.value;document.getElementById('wv-'+i.dataset.key).textContent=i.value+'%'});const total=Object.values(w).reduce((a,b)=>a+b,0);const r=scoreOps(w);if(!r){document.getElementById('simOps').textContent='—';document.getElementById('simBand').textContent='Weights must total 100%';document.getElementById('simBand').className='band watch';document.getElementById('simNote').textContent=`Current total: ${total}%`;return;}const b=bandFor(r.ops);document.getElementById('simOps').textContent=r.ops.toFixed(1);document.getElementById('simBand').textContent=b[0].toUpperCase();document.getElementById('simBand').className='band '+b[1];document.getElementById('simNote').textContent=`ROS ${r.ros.toFixed(2)} · Risk penalty 6.25 · total weights ${total}%`;}
+document.getElementById('simulateBtn').onclick=()=>{buildWeightControls();document.getElementById('weightModal').classList.add('active')};document.getElementById('closeWeight').onclick=()=>document.getElementById('weightModal').classList.remove('active');document.getElementById('weightModal').onclick=e=>{if(e.target.id==='weightModal')e.currentTarget.classList.remove('active')};
+document.querySelectorAll('.decision-btn').forEach(b=>b.onclick=()=>{const action=b.dataset.action;document.querySelectorAll('.decision-btn').forEach(x=>x.style.outline='none');b.style.outline='2px solid rgba(255,255,255,.35)';if(action==='approve'){document.getElementById('handoffPlaceholder').style.display='none';document.getElementById('handoff').classList.add('active');auditEntries.unshift(['09 Jul 2024 · human action','Brand Manager APPROVED opportunity and transferred structured package to NEXT Strategist.']);renderAudit();}else{document.getElementById('handoff').classList.remove('active');document.getElementById('handoffPlaceholder').style.display='block';document.getElementById('handoffPlaceholder').textContent=`Decision recorded: ${action.toUpperCase()}. Radar preserves the evidence, score and Brand Manager rationale in the audit trail.`;auditEntries.unshift(['09 Jul 2024 · human action',`Brand Manager selected ${action.toUpperCase()} for Brat Summer × Axe.`]);renderAudit();}});
+renderEvents();renderRanks('brandRank');renderRanks('dossierRank');renderScores();renderEvidence();renderMiniWeights();renderAudit();
+</script>
+</body>
+</html>

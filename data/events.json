@@ -1,0 +1,52 @@
+{
+  "as_of": "2024-07-09",
+  "scoring_profile": {
+    "brand_relevance": 20,
+    "momentum": 30,
+    "novelty": 20,
+    "commercial_signal": 15,
+    "actionability": 15,
+    "risk_penalty_multiplier": 0.25
+  },
+  "events": [
+    {
+      "id": "CUL-240607-BRAT",
+      "title": "Brat Summer",
+      "hero": true,
+      "top_brand": "Axe",
+      "brand_matches": {"Axe": 80, "Dove": 46, "Rexona": 32, "Knorr": 14},
+      "scores": {"brand_relevance": 80, "momentum": 95, "novelty": 91, "commercial_signal": 60, "actionability": 84, "risk": 25},
+      "ros": 84.30,
+      "ops": 78.05,
+      "band": "High Priority",
+      "evidence_classes": ["PUBLIC FACT", "CONTROLLED DEMO INPUT", "SYNTHETIC INTERNAL", "AI-DERIVED"]
+    },
+    {
+      "id": "SPT-REX-STOPPAGE",
+      "title": "Rexona × stoppage-time moment",
+      "top_brand": "Rexona",
+      "scores": {"brand_relevance": 98, "momentum": 94, "novelty": 90, "commercial_signal": 55, "actionability": 96, "risk": 10},
+      "ros": 88.45,
+      "ops": 85.95,
+      "band": "Critical"
+    },
+    {
+      "id": "CUL-BARBIE-DOVE",
+      "title": "Barbie beauty discourse",
+      "top_brand": "Dove",
+      "scores": {"brand_relevance": 85, "momentum": 94, "novelty": 78, "commercial_signal": 58, "actionability": 76, "risk": 28},
+      "ros": 80.90,
+      "ops": 73.90,
+      "band": "High Priority"
+    },
+    {
+      "id": "FOOD-GIRLDINNER",
+      "title": "Girl Dinner",
+      "top_brand": "Knorr",
+      "scores": {"brand_relevance": 82, "momentum": 90, "novelty": 84, "commercial_signal": 72, "actionability": 88, "risk": 18},
+      "ros": 84.20,
+      "ops": 79.70,
+      "band": "High Priority"
+    }
+  ]
+}
